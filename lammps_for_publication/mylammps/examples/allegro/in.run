@@ -1,0 +1,100 @@
+###############################################################################
+# MD simulation for NN Nequip NaCl solution
+###############################################################################
+
+###############################################################################
+# VARIABLES
+###############################################################################
+# Configuration files
+variable cfgFile         string "./cg_dna/config.data"
+# Timesteps
+variable numSteps        equal  10000000
+variable dt              equal  1
+# Masses
+#variable mass_Na          equal  22.989769
+#variable mass_Cl          equal  35.453
+#variable mass_DNK          equal  13.0
+
+########################################################################################################
+variable x_file		string "./cg_dna/efield_x.dx"
+variable y_file		string "./cg_dna/efield_y.dx" 
+variable z_file		string "./cg_dna/efield_z.dx" 
+
+
+
+variable yes    		string "/home/ema/o362/n2p2_lammps_newsym/n2p2/examples/interface-LAMMPS/interface-LAMMPS/new_symamaury_x.dx" 
+
+variable x_Com_val equal 49.86 
+variable y_Com_val equal 50.04 
+variable z_Com_val equal 17.00 
+variable delta_val equal 1.0
+
+variable E_unit_kcal_val equal 0.596161774 
+#######################################################################################################
+
+
+
+###############################################################################
+# GENERAL SETUP
+###############################################################################
+units real
+atom_style full
+boundary p p p
+############################################################################NEWPROPERTY
+#fix prop all property/atom d_elforcex d_elforcey d_elforcez ghost yes
+############################################################################
+
+read_data ${cfgFile} 
+
+group ions type 5 6  
+group DNA type 1 2 3 4 7 
+ 
+
+
+###############################################################################
+# NN
+###############################################################################
+
+neighbor 2.0 bin
+neigh_modify page 500000 one 50000 every 1 delay 0 check yes
+
+
+pair_style  allegro  
+pair_coeff * * ./cg_dna/ff/ff.pth C N O P Na Cl O
+
+
+
+timestep ${dt}
+thermo 1000
+###############################################################################
+#SIMULATION
+###############################################################################
+
+velocity DNA set 0.0 0.0 0.0 #tako imam ja vrstni red
+velocity ions create 300.0 12345
+
+
+
+compute tempMobile ions temp
+compute tempfix DNA temp
+compute pressMobile all pressure tempMobile
+compute pressall all pressure thermo_temp
+compute potene all pe
+thermo_style custom step c_tempMobile c_tempfix c_pressMobile c_pressall temp press pe ke etotal
+thermo_modify temp tempMobile
+###############################################################################
+
+###############################################################################
+# INTEGRATOR
+###############################################################################
+fix addforce_force ions addforce_PB ${yes} ${x_file} ${y_file} ${z_file} ${x_Com_val} ${y_Com_val} ${z_Com_val} ${E_unit_kcal_val}  
+fix 1 ions nvt temp 300.0 300.0 100.0
+fix_modify addforce_force energy yes
+fix_modify addforce_force virial yes
+
+dump 1 all custom 1000 ./cg_dna/simu_trained/dump.out id type x y z # fx fy fz
+
+
+dump trajector_simu all atom 1000 ./cg_dna/simu_trained/trajequi.lammpstrj
+
+run 26000000 

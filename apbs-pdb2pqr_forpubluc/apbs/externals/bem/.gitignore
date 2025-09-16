@@ -1,0 +1,4 @@
+msms
+build/
+examples/surface_potential.*
+.DS_store

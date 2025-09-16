@@ -1,0 +1,53 @@
+.DS_store
+*.xcodeproj/
+*.o
+*.a
+
+# executable ignores
+bin
+build*
+
+
+# Python script ignores
+*.force
+*.torque
+
+## PBAM output ignores
+*.dx 
+*.dat
+dyn_*
+*.stat
+*out.pqr
+test_cged_out.pqr
+
+## Latex ignores
+*.aux
+*.log
+*.synctex.gz
+*.out
+*.bbl
+*.blg
+*.toc
+
+## Files for work on APBS comparison
+APBS_compare/
+
+## Pretty pictures
+*.png
+*.jpg
+*.jpeg
+*.pdf
+
+# Dynamics ignores
+[0-2][0-9]
+contact_1BRS_other/
+pbcs
+porin
+
+# manybody
+grid_test
+random_test
+
+# PBSAM outputs
+*.exp
+*.bin

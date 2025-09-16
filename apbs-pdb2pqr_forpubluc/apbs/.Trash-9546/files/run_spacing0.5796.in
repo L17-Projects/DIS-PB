@@ -1,0 +1,35 @@
+read
+    mol pqr vaja_centerzz.pqr
+    kappa dx kappa_1.10_spac0.5796.dx
+    diel dx dielx_1.10_spac0.57.dx diely_1.10_spac0.57.dx dielz_1.10_spac0.57.dx
+end
+elec name polar
+    mg-auto
+    dime 161 161 65
+    cglen 93 93 40
+    fglen 93 93 40
+    cgcent mol 1
+    fgcent mol 1
+    mol 1
+    srfm mol
+    srad 0.0
+    npbe 
+    bcfl zero 
+    pdie 1.0 #2
+    sdie 75.5 #75.5
+    ion charge 1.0 conc 0.15 radius 2
+    ion charge -1.0 conc 0.15 radius 2
+    chgm spl2 
+    sdens 10.00 
+    swin 0.30 
+    temp 298.15
+    calcenergy total 
+    calcforce no
+    write pot dx pot_0.5796_1.10
+    usemap diel 1
+    usemap kappa 1
+    #write dielx dx dielx_spac0.5796_apbs_1.10
+    #write dielz dx dielz_spac0.5796_apbs_1.10
+    #write kappa dx kappa_spac0.5796_apbs_1.10
+end
+quit

@@ -1,0 +1,37 @@
+read 
+    mol pqr dna.pqr   
+   
+end
+elec
+    mg-auto
+    dime 257 257 193	
+    fglen 95 95 64    # Rectangular box VEČJI Z NUJNO ENAK SPACING!!!  79.473 x 73.810 x 68.145
+    fgcent mol 1             	# Center on the molecule
+    cglen 150 150 120
+    cgcent mol 1            	 # Center on the molecule
+    mol 1                   
+    npbe                    # Nonlinear DNA
+    bcfl sdh                # Full multipole approximation ZERO; sdh v članku da je ok sklopljeno enako mdh
+    ion 1 1 2.0      # 100 mM Na+ charge(float number in ec), conc (M), radius (A) 1.7
+    ion -1 1 2.0       # 100 mM Cl- DRUGI RADIJI
+    pdie 2.0                # Solute dielectric
+    sdie 78.4              # Solvent dielectric
+    chgm spl0               # Linear charge discretization
+    srfm smol               # Smoothed molecular surface
+    srad 1.4              # Solvent probe radius
+    swin 0.3                # Spline surface window (not used)
+    sdens 10.0              # Sphere density
+    temp 300             # Temperature
+    gamma 0.105             # Apolar coefficient
+    calcenergy no           # No energies
+    calcforce no            # No forces
+    write gradx dx efield_x
+    write grady dx efield_y
+    write gradz dx efield_z
+  
+    
+
+end
+
+quit
+
