@@ -1,12 +1,12 @@
 # Running APBS Example
 
 In this folder you can run **APBS** using the example setup from:
-/home/ema/apbs-pdb2pqr_forpubluc/apbs/examples
+/home/ema/apbs/apbs/examples
 
 
 ### Files
 - **`run.in`** – input file used to run APBS  
-- **`fna.pqr`** – structure file representing an elongated coarse-grained DNA molecule  
+- **`dna.pqr`** – structure file representing an elongated coarse-grained DNA molecule  
 
 ### Output
 Running APBS with this setup will generate the following files:
