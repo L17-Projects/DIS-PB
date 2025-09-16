@@ -1,7 +1,7 @@
 # Running APBS Example
 
 In this folder you can run **APBS** using the example setup from:
-/home/ema/apbs/apbs/examples
+/apbs/examples
 
 
 ### Files
