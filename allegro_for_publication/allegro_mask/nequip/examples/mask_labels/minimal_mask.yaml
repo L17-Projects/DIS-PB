@@ -1,0 +1,78 @@
+# Training with masking out some force labels.
+#
+# !! This is in BETA !!
+# !! please check your results carefully and report any issues you find!
+#
+# NequIP supports masking out ground truth label values from loss functions and metrics 
+# by setting them to NaN. All statistics will be correctly computed with denominators
+# taken from the number of un-masked labels.
+
+# !! PLEASE NOTE: `minimal_mask.yaml` is meant as a _minimal_ example of a tiny, fast
+#                 training that shows how to mask out some force labels.
+#                 These are NOT recommended hyperparameters for real applications!
+#                 Please see `example.yaml` for a reasonable starting point.
+
+# general
+root: results/
+run_name: minimal-Cu-mask
+seed: 123
+dataset_seed: 456
+
+# network --- see `configs/minimal.yaml`
+num_basis: 8
+r_max: 4.0
+l_max: 1
+parity: true
+num_features: 16
+num_layers: 4
+
+# data set
+dataset: ase
+# If you don't have this file, please run `generate_slab.py` in this directory to generate the toy data:
+dataset_file_name: Cu_EMT_slab.xyz
+# dataset_key_mapping:
+#   tags: tags
+dataset_include_keys: ["tags"]
+
+# ! This important line adds a "pre-transform" to the dataset that processes the `AtomicData` *after* it is loaded and processed
+#   from the original data file, but before it is cached to disk for later training use.  This function can be anything, but here
+#   we use `nequip.data.transforms.MaskByAtomTag` to make ground truth force labels on atoms with a certain tag NaN (i.e. masked)
+#   We can mask multiple tags if we like, or mask other per-atom fields.  In this case, we mask out tag 0, which is subsurface
+#   atoms in the toy data from `generate_slab.py`.
+dataset_pre_transform: !!python/object:nequip.data.transforms.MaskByAtomTag {'tag_values_to_mask': [0], 'fields_to_mask': ['forces']}
+
+chemical_symbols:
+  - Cu
+
+# training
+n_train: 5
+n_val: 5
+batch_size: 1
+max_epochs: 20
+
+# loss function
+loss_coeffs:
+  forces:
+   - 1
+   - MSELoss
+     # ! We have to specify that the force loss function should treat NaNs as masked data, rather than propagating them as usual
+     #   (If we forget this, everything will become a NaN.)
+   - {"ignore_nan": true}
+  total_energy:
+   - 1
+   - PerAtomMSELoss
+
+metrics_components:
+  - - forces
+    - mae
+      # ! We have to specify that the force metrics should treat NaNs as masked data, rather than propagating them as usual
+      #   (If we forget this, we will just get 0 due to the NaNs.)
+    - ignore_nan: True
+  - - forces
+    - rmse
+      # same as above
+    - ignore_nan: True   
+  - - total_energy
+    - mae    
+  - - total_energy
+    - mae
