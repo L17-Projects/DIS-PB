@@ -6,9 +6,9 @@ In this configuration, **CG_DNA atom forces are not considered during training**
 ### Steps
 
 1. **Prepare training data**  
-   - Copy the previously prepared `input.data` file into:  
+   - Copy the previously prepared `config_for_train.xyz` file into:  
      ```
-     allegro/examples/input.data
+     allegro/examples/input_data
      ```
 
 2. **Run the training**  

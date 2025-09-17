@@ -10,10 +10,7 @@ variable cfgFile         string "./cg_dna/config.data"
 # Timesteps
 variable numSteps        equal  10000000
 variable dt              equal  1
-# Masses
-#variable mass_Na          equal  22.989769
-#variable mass_Cl          equal  35.453
-#variable mass_DNK          equal  13.0
+
 
 ########################################################################################################
 variable x_file		string "./cg_dna/efield_x.dx"
@@ -47,7 +44,7 @@ boundary p p p
 read_data ${cfgFile} 
 
 group ions type 5 6  
-group DNA type 1 2 3 4 7 
+group DNA type 1 2 3 4 
  
 
 
@@ -60,7 +57,7 @@ neigh_modify page 500000 one 50000 every 1 delay 0 check yes
 
 
 pair_style  allegro  
-pair_coeff * * ./cg_dna/ff/ff.pth C N O P Na Cl O
+pair_coeff * * ./cg_dna/ff/ff.pth C N O P Na Cl
 
 
 

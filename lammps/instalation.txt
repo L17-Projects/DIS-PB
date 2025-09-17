@@ -1,0 +1,25 @@
+# use the env that has PyTorch + Allegro runtime
+source /path/to/anaconda3/bin/activate name_of_your_env
+#####"maybe" export Torch_DIR="/path/to/anaconda3/envs/name_of_your_env/lib/python3.8/site-packages/torch/share/cmake/Torch"
+cd /path/to/lammps
+rm -rf build && mkdir build && cd build
+
+# get the LibTorch prefix from your *current* PyTorch
+export CMAKE_PREFIX_PATH=$(python -c 'import torch; print(torch.utils.cmake_prefix_path)')
+export MKL_INCLUDE_DIR=/tmp
+
+cmake ../cmake \
+  -D CMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH" \
+  -D MKL_INCLUDE_DIR="${MKL_INCLUDE_DIR:-}" \
+  -D BUILD_MPI=on \
+  -D BUILD_SHARED_LIBS=on \
+  -D LAMMPS_EXCEPTIONS=on \
+  -D FFT=FFTW3 \
+  -D PKG_KOKKOS=off \
+  -D PKG_OPENMP=on \
+  -D PKG_KSPACE=on -D PKG_MOLECULE=on -D PKG_RIGID=on -D PKG_MANYBODY=on \
+  -D PKG_OPT=on \
+  
+
+cmake --build . -j
+
